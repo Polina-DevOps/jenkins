@@ -1,24 +1,29 @@
 pipeline {
-    agent none
-
+    agent any
+    parameters {
+        choice(name: 'CHOICE', choices: ['TERRAFORM_INIT', 'TERRAFORM_APPLY', 'TERRAFORM_Destroy'], description: 'Pick something')
     stages {
-        stage('ONE') {
-            agent {
-                label 'MASTER'
-            }
+        stage('TERRAFORM_INIT') {
             steps {
-                echo 'Testing in master..'
+                echo 'Running terraform init..'
                 sh 'hostname'
+                sh 'cd Roboshop_terraform ; terraform init'
             }
         }
 
-    stage('TWO') {
-        agent {
-            label 'workstation'
-        }
+    stage('TERRAFORM_APPLY') {
         steps {
-               echo 'Testing in workstation..'
+               echo 'Running terraform apply..'
                sh 'hostname'
+               sh 'terraform apply -auto-approve'
+            }
+        }
+
+    stage('TERRAFORM_Destroy') {
+        steps {
+               echo 'Running terraform Destroy..'
+               sh 'hostname'
+               sh 'terraform destroy -auto-approve'
             }
         }
     }
