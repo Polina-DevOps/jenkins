@@ -2,6 +2,7 @@ pipeline {
     agent any
     parameters {
         choice(name: 'CHOICE', choices: ['TERRAFORM_INIT', 'TERRAFORM_APPLY', 'TERRAFORM_Destroy'], description: 'Pick something')
+    }
     stages {
         stage('TERRAFORM_INIT') {
             steps {
