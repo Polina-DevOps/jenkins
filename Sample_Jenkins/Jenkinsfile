@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('ONE') {
             steps {
-                echo 'Tesing..'
+                echo 'Testing..'
+                sh 'hostname'
             }
         }
     }
