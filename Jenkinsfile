@@ -1,30 +1,42 @@
 pipeline {
-    agent any
+    agent {
+        label 'workstation'
+    }
     parameters {
-        choice(name: 'CHOICE', choices: ['TERRAFORM_INIT', 'TERRAFORM_APPLY', 'TERRAFORM_Destroy'], description: 'Pick something')
+        choice(name: 'CHOICE', choices: ['CREATE', 'DESTROY'], description: 'Pick something')
     }
     stages {
         stage('TERRAFORM_INIT') {
             steps {
                 echo 'Running terraform init..'
                 sh 'hostname'
-                sh 'cd Roboshop_terraform ; terraform init'
+                sh 'cd roboshop-terraform ; terraform init'
             }
         }
 
     stage('TERRAFORM_APPLY') {
+        when {
+            environment name: 'CHOICE', value: 'CREATE'
+        }
         steps {
                echo 'Running terraform apply..'
                sh 'hostname'
-               sh 'terraform apply -auto-approve'
+               sh 'cd roboshop-terraform ; terraform apply -auto-approve'
             }
         }
 
     stage('TERRAFORM_Destroy') {
+        when {
+            environment name: 'CHOICE', value: 'DESTROY'
+        }
+        input {
+            message "Should we continue?"
+            ok "Yes, we should."
+        }
         steps {
                echo 'Running terraform Destroy..'
                sh 'hostname'
-               sh 'terraform destroy -auto-approve'
+               sh 'cd roboshop-terraform ; terraform destroy -auto-approve'
             }
         }
     }
